@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Memo;
+use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method Memo|null find($id, $lockMode = null, $lockVersion = null)
- * @method Memo|null findOneBy(array $criteria, array $orderBy = null)
- * @method Memo[]    findAll()
- * @method Memo[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Article|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Article|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Article[]    findAll()
+ * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MemoRepository extends ServiceEntityRepository
+class ArticleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Memo::class);
+        parent::__construct($registry, Article::class);
     }
 
     // /**
-    //  * @return Memo[] Returns an array of Memo objects
+    //  * @return Article[] Returns an array of Article objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class MemoRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Memo
+    public function findOneBySomeField($value): ?Article
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.exampleField = :val')

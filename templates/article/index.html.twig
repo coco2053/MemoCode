@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes articles de code{% endblock %}
+
+{% block body %}
+<section class="article">
+    {% for aricle in articles %}
+    <article>
+        <h2>{{ article.title }}</h2>
+        <div class="metadata">Ajouté le {{ memo.createdAt | date('d/m/Y') }}</div>
+        <div class="content">
+            {{ memo.content | raw }}
+            <!--<a href="{{ path('memo_show', {'id': memo.id}) }}" class="btn btn-primary">Lire la suite</a>-->
+        </div>
+    </article>
+</section>
+{% endfor %}
+{% endblock %}
