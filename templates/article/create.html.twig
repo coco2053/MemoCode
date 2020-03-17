@@ -1,0 +1,46 @@
+<div>
+    {{ form_start(form, {'action': path('article_add')}) }}
+    {{ form_row(form._token) }}
+    {{ form_row(form.title, {'label': 'Titre', 'attr': {'placeholder': 'Entrez le titre de l\'article'}}) }}
+
+    {{ form_row(form.description, {'label': 'Description', 'attr': {'placeholder': 'Décrivez l\'article','rows': "3" }}) }}
+
+    <button type="button" class="btn btn-secondary btn-sm btn-add" data-rel="#texts">Ajouter un bloc de texte</button>
+    <button type="button" class="btn btn-secondary btn-sm btn-add" data-rel="#memos">Ajouter un bloc de code</button>
+    <div id="texts" data-index="{{ form.texts|length > 0 ? form.texts|last.vars.name+1 : 0 }}" data-prototype="{{ include("theme/form_text.html.twig", { form: form.texts.vars.prototype })|e("html_attr") }}">
+        {% for text in form.texts %}
+            {{ include("theme/form_text.html.twig", { form: text }) }}
+        {% endfor %}
+    </div>
+    <div id="memos" data-index="{{ form.memos|length > 0 ? form.memos|last.vars.name+1 : 0 }}" data-prototype="{{ include("theme/form_memo.html.twig", { form: form.memos.vars.prototype })|e("html_attr") }}">
+        {% for text in form.memos %}
+            {{ include("theme/form_memo.html.twig", { form: memo }) }}
+        {% endfor %}
+    </div>
+    <div id="article"></div>
+
+    <button type="submit" class="btn btn-success">
+        {% if editMode %}
+            Enregistrer
+        {% else %}
+            Ajouter l'article
+        {% endif %}
+    </button>
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+
+<script>
+    $(".btn-add").on("click", function() {
+        var $collectionHolder = $($(this).data("rel"));
+        var index = $collectionHolder.data("index");
+        var prototype = $collectionHolder.data("prototype");
+        //console.log(prototype);
+        $("#article").append(prototype.replace(/__name__/g, index));
+        $collectionHolder.data("index", index+1);
+    });
+
+    $("body").on("click", ".btn-remove", function() {
+        $("."+$(this).data("rel")).remove();
+    });
+</script>

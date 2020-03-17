@@ -2,11 +2,57 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/prism.css" rel="stylesheet" />
+        <style>
+            .btn-success {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+        </style>
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        <a data-target="{{ path('article_add') }}" data-tooltip="voir"
+   class="tooltipped modal-trigger btn right-align"
+   href="#addModal">+</a>
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Nouvel article</h5>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><b>X</b></button>
+                </div>
+                    <div class="modal-body" id="modal-ajax">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+              crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="js/prism.js"></script>
+        {% block javascripts %}
+            <script>
+                $(function() {
+                    $('.modal-trigger').click(function () {
+                        //On récupère l'url depuis la propriété "Data-target" de la balise html a
+                        url = $(this).attr('data-target');
+                        //on fait un appel ajax vers l'action symfony qui nous renvoie la vue
+                        $.get(url, function (data) {
+                            //on injecte le html dans la modale
+                            $('.modal-body').html(data);
+                            //On initialise les modales materialize
+                            $('#addModal').modal();
+                        });
+                    })
+                });
+            </script>
+        {% endblock %}
     </body>
 </html>

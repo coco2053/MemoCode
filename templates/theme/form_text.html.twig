@@ -1,0 +1,5 @@
+<div class="del-text-{{ form.vars.name }}">
+    {{ form_row(form.content, {'label': 'Texte', 'attr': {'required' : 'false',
+                                                         'placeholder' : 'Entrez votre texte'}}) }}
+    <button type="button" class="btn btn-remove fa fa-trash fa-lg" data-rel="del-text-{{ form.vars.name }}"></button>
+</div>

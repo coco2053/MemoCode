@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\MemoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\TextRepository")
  */
-class Memo
+class Text
 {
     /**
      * @ORM\Id()
@@ -22,20 +22,9 @@ class Memo
     private $content;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Article", inversedBy="memos")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Article", inversedBy="texts")
      */
     private $article;
-
-    public function __construct()
-    {
-        $this->setCreatedAt(new \DateTime());
-    }
 
     public function getId(): ?int
     {
@@ -50,18 +39,6 @@ class Memo
     public function setContent(string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

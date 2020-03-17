@@ -4,13 +4,17 @@
 
 {% block body %}
 <section class="article">
-    {% for aricle in articles %}
+
+
+    {% for article in articles %}
     <article>
         <h2>{{ article.title }}</h2>
-        <div class="metadata">Ajouté le {{ memo.createdAt | date('d/m/Y') }}</div>
+        <div class="metadata">Ajouté le {{ article.createdAt | date('d/m/Y') }}</div>
         <div class="content">
-            {{ memo.content | raw }}
-            <!--<a href="{{ path('memo_show', {'id': memo.id}) }}" class="btn btn-primary">Lire la suite</a>-->
+            {% for memo in article.memos %}
+                <pre><code class="language-javascript" contenteditable spellcheck="false">{{ memo.content | raw }}</code></pre>
+            {% endfor %}
+            <!--<a href="{{ path('article_show', {'id': article.id}) }}" class="btn btn-primary">Lire la suite</a>-->
         </div>
     </article>
 </section>
