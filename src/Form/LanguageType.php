@@ -2,29 +2,24 @@
 
 namespace App\Form;
 
-use App\Entity\Text;
+use App\Entity\Language;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TextType extends AbstractType
+class LanguageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('content')
-             ->add('articleOrder',null,array(
-              'label' => false,
-              'attr' => array(
-                'style' =>'visibility:hidden;'
-                )))
+            ->add('name')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Text::class,
+            'data_class' => Language::class,
         ]);
     }
 }

@@ -3,20 +3,21 @@
 {% block title %}Mes articles de code{% endblock %}
 
 {% block body %}
-<section class="article">
-
-
-    {% for article in articles %}
-    <article>
-        <h2>{{ article.title }}</h2>
-        <div class="metadata">Ajouté le {{ article.createdAt | date('d/m/Y') }}</div>
-        <div class="content">
-            {% for memo in article.memos %}
-                <pre><code class="language-javascript" contenteditable spellcheck="false">{{ memo.content | raw }}</code></pre>
-            {% endfor %}
-            <!--<a href="{{ path('article_show', {'id': article.id}) }}" class="btn btn-primary">Lire la suite</a>-->
-        </div>
-    </article>
-</section>
-{% endfor %}
+<section class="articles">
+        {% for article in articles %}
+            <a data-target="{{ path('article_show', {'id': article.id}) }}" data-tooltip="Lire l'article" class="modal-trigger" href="#addModal">
+                <div class="article">
+                    <figure class="thumbnail">
+                        {% for memo in article.memos %}
+                            <div>{{ memo.language.name }}</div>
+                        {% endfor %}
+                </figure>
+                <div class="info">
+                    <h2>{{ article.title }}</h2>
+                    <div class="date">Ajouté le {{ article.createdAt | date('d/m/Y') }}</div>
+                    <div class="description">{{ article.description}}</div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
 {% endblock %}

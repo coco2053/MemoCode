@@ -32,6 +32,17 @@ class Memo
      */
     private $article;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Language")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $language;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $articleOrder;
+
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
@@ -74,6 +85,30 @@ class Memo
     public function setArticle(?Article $article): self
     {
         $this->article = $article;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?Language
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?Language $language): self
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    public function getArticleOrder(): ?int
+    {
+        return $this->articleOrder;
+    }
+
+    public function setArticleOrder(int $articleOrder): self
+    {
+        $this->articleOrder = $articleOrder;
 
         return $this;
     }

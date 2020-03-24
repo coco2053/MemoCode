@@ -1,0 +1,1 @@
+INSERT INTO `language` (`id`, `name`) VALUES (NULL, 'html'), (NULL, 'css'), (NULL, 'php'), (NULL, 'javascript'), (NULL, 'twig'), (NULL, 'git'), (NULL, 'sql'), (NULL, 'yalm'), (NULL, 'c'), (NULL, 'cpp'), (NULL, 'processing'), (NULL, 'arduino'), (NULL, 'csharp'), (NULL, 'phpdoc'), (NULL, 'json'), (NULL, 'phpdoc'), (NULL, 'python'), (NULL, 'regex'), (NULL, 'ruby');

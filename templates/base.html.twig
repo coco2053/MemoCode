@@ -3,36 +3,139 @@
     <head>
         <meta charset="UTF-8">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu:700&display=swap" rel="stylesheet">
         <link href="css/prism.css" rel="stylesheet" />
         <style>
+            .articles a {
+                text-decoration: none;
+                color: black;
+                width: 100%;
+            }
+            .articles a:hover .article {
+                box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
+                transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            }
+            .article {
+                margin-top: 20px;
+                margin-bottom: 20px;
+                height: 200px;
+                box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+            }
+            header {
+                box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
+            }
+            #logo {
+                margin-left: 15%;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            .thumbnail {
+                font-family: 'Ubuntu', sans-serif;
+                font-size: 30px;
+                text-align: center;
+                color: white;
+                width: calc(150px * 1.77777);
+                height: 150px;
+                background-color: #b470b3;
+                display: inline-block;
+                position: relative;
+                padding: 10px;
+                margin: 20px;
+            }
+            .thumbnail li {
+                list-style: none;
+            }
+            .info {
+                margin-top: 10px;
+                display: inline-block;
+                position: relative;
+                height: 150px;
+                /*background-color: blue;*/
+                vertical-align: top;
+            }
+            .help-block {
+                color: red;
+            }
             .btn-success {
                 margin-top: 20px;
                 margin-bottom: 20px;
+            }
+            .form-check {
+                display: inline-block;
+                margin: 2px;
+                padding: 0px;
+
+            }
+            .switch-field {
+                display: flex;
+                /*margin-bottom: 36px;
+                /*overflow: hidden;*/
+            }
+
+            .switch-field input {
+                position: absolute !important;
+                clip: rect(0, 0, 0, 0);
+                height: 1px;
+                width: 1px;
+                border: 0;
+                overflow: hidden;
+            }
+
+            .switch-field label {
+                background-color: #e4e4e4;
+                color: rgba(0, 0, 0, 0.6);
+                font-size: 14px;
+                line-height: 1;
+                text-align: center;
+                padding: 8px 16px;
+                border-radius: 4px;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+                transition: all 0.1s ease-in-out;
+            }
+
+            .switch-field label:hover {
+                cursor: pointer;
+            }
+
+            .switch-field input:checked + label {
+                background-color: #a5dc86;
+                box-shadow: none;
             }
         </style>
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <a data-target="{{ path('article_add') }}" data-tooltip="voir"
-   class="tooltipped modal-trigger btn right-align"
-   href="#addModal">+</a>
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title">Nouvel article</h5>
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><b>X</b></button>
-                </div>
-                    <div class="modal-body" id="modal-ajax">
+        <header>
+            <img id="logo" src="image/logo.svg" width="300px"/>
+        </header>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2"> </div>
+                <div class="col-md-8">
+            <a data-target="{{ path('article_add') }}" data-tooltip="Nouvel article"
+       class="tooltipped modal-trigger btn right-align"
+       href="#addModal">+</a>
+            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><b>X</b></button>
                     </div>
-                    <div class="modal-footer">
+                        <div class="modal-body" id="modal-ajax">
+                        </div>
+                        <div class="modal-footer">
+                        </div>
                     </div>
                 </div>
             </div>
+            {% block body %}{% endblock %}
+            </div>
+            <div class="col-md-2"> </div>
         </div>
-        {% block body %}{% endblock %}
+    </div>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
               crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -40,13 +143,25 @@
         {% block javascripts %}
             <script>
                 $(function() {
+                    let colors = ['#FF4626', '#FF8626', '#FFBC26', '#FFEB26', '#ABFF26', '#26FF35', '#28FF73', '#28FFE8', '#28A0FF', '#2834FF', '#9228FF', '#FF28F3'];
+
+                    $('figure').each(function(index){
+                        let randomIndex = Math.floor(Math.random() * colors.length);
+                        $(this).css('background-color', colors[randomIndex]);
+                    });
+                    $('#addModal').on('show.bs.modal',
+                        function(e) {
+                        Prism.highlightAllUnder($('#modal-ajax')[0]);
+                    });
                     $('.modal-trigger').click(function () {
                         //On récupère l'url depuis la propriété "Data-target" de la balise html a
                         url = $(this).attr('data-target');
+                        title = $(this).attr('data-tooltip');
                         //on fait un appel ajax vers l'action symfony qui nous renvoie la vue
                         $.get(url, function (data) {
                             //on injecte le html dans la modale
                             $('.modal-body').html(data);
+                            $('.modal-title').html(title);
                             //On initialise les modales materialize
                             $('#addModal').modal();
                         });

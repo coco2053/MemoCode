@@ -1,46 +1,156 @@
-<div>
-    {{ form_start(form, {'action': path('article_add')}) }}
-    {{ form_row(form._token) }}
-    {{ form_row(form.title, {'label': 'Titre', 'attr': {'placeholder': 'Entrez le titre de l\'article'}}) }}
+{{ form_start(form, {'action': path('article_add')}) }}
+{{ form_row(form._token) }}
 
-    {{ form_row(form.description, {'label': 'Description', 'attr': {'placeholder': 'Décrivez l\'article','rows': "3" }}) }}
-
-    <button type="button" class="btn btn-secondary btn-sm btn-add" data-rel="#texts">Ajouter un bloc de texte</button>
-    <button type="button" class="btn btn-secondary btn-sm btn-add" data-rel="#memos">Ajouter un bloc de code</button>
-    <div id="texts" data-index="{{ form.texts|length > 0 ? form.texts|last.vars.name+1 : 0 }}" data-prototype="{{ include("theme/form_text.html.twig", { form: form.texts.vars.prototype })|e("html_attr") }}">
-        {% for text in form.texts %}
-            {{ include("theme/form_text.html.twig", { form: text }) }}
-        {% endfor %}
-    </div>
-    <div id="memos" data-index="{{ form.memos|length > 0 ? form.memos|last.vars.name+1 : 0 }}" data-prototype="{{ include("theme/form_memo.html.twig", { form: form.memos.vars.prototype })|e("html_attr") }}">
-        {% for text in form.memos %}
-            {{ include("theme/form_memo.html.twig", { form: memo }) }}
-        {% endfor %}
-    </div>
-    <div id="article"></div>
-
-    <button type="submit" class="btn btn-success">
-        {% if editMode %}
-            Enregistrer
-        {% else %}
-            Ajouter l'article
-        {% endif %}
-    </button>
-
-    {{ form_end(form, {'render_rest': false}) }}
+{{ form_row(form.title, {'label': 'Titre', 'attr': {'placeholder': 'Entrez le titre de l\'article'}}) }}
+<div class="col col-md-10">{{ form_widget(form.title) }}</div>
+<div class="form_errors col-md-12">
+    {{ form_errors(form.title) }}
 </div>
 
-<script>
-    $(".btn-add").on("click", function() {
-        var $collectionHolder = $($(this).data("rel"));
-        var index = $collectionHolder.data("index");
-        var prototype = $collectionHolder.data("prototype");
-        //console.log(prototype);
-        $("#article").append(prototype.replace(/__name__/g, index));
-        $collectionHolder.data("index", index+1);
-    });
 
-    $("body").on("click", ".btn-remove", function() {
-        $("."+$(this).data("rel")).remove();
+<div class="row" id="article_exists_error" style="display: none;">
+    <div class="col col-xs-12">
+        <div class="form_errors col-lg-12">
+            <span class="help-block">
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-exclamation-circle"></i> {{ 'Un article du même nom existe déjà !' }}</li>
+                </ul>
+            </span>
+        </div>
+    </div>
+</div>
+
+{{ form_row(form.description, {'label': 'Description', 'attr': {'placeholder': 'Décrivez l\'article','rows': "3" }}) }}
+
+<button type="button" class="btn btn-secondary btn-sm btn-add add_text" data-rel="#texts">Ajouter un bloc de texte</button>
+<button type="button" class="btn btn-secondary btn-sm btn-add add_memo" data-rel="#memos">Ajouter un bloc de code</button>
+<div id="texts" data-index="{{ form.texts|length > 0 ? form.texts|last.vars.name+1 : 0 }}" data-prototype="{{ include("theme/form_text.html.twig", { form: form.texts.vars.prototype })|e("html_attr") }}">
+    {% for text in form.texts %}
+        {{ include("theme/form_text.html.twig", { form: text }) }}
+    {% endfor %}
+</div>
+<div id="memos" data-index="{{ form.memos|length > 0 ? form.memos|last.vars.name+1 : 0 }}" data-prototype="{{ include("theme/form_memo.html.twig", { form: form.memos.vars.prototype })|e("html_attr") }}">
+    {% for text in form.memos %}
+        {{ include("theme/form_memo.html.twig", { form: memo }) }}
+    {% endfor %}
+</div>
+<div id="article"></div>
+<div class="row" id="article_no_code" style="display: none;">
+    <div class="col col-xs-12">
+        <div class="form_errors col-lg-12">
+            <span class="help-block">
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-exclamation-circle"></i> {{ 'Veuillez ajouter au moins un bloc de code !' }}</li>
+                </ul>
+            </span>
+        </div>
+    </div>
+</div>
+
+<button type="submit" class="btn btn-success submit">
+    {% if editMode %}
+        Enregistrer
+    {% else %}
+        Ajouter l'article
+    {% endif %}
+</button>
+
+
+{{ form_end(form, {'render_rest': false}) }}
+
+<button id="log">log</button>
+
+<script>
+    $(function() {
+        $("#article_title").bind("input change keyup", checkExists);
+
+        $("form[name=article]").on('submit', function(e){
+            if ($('.switch-field').length < 1) {
+                $("#article_no_code").show().delay(2000).fadeOut(300);
+                return false;
+            }
+            var $allNumbers = $('[type=number]', this.form);
+            console.log($allNumbers);
+            //allNumbers.val(2);
+            $('[type=number]', this.form).each(function(index) {
+                this.value = index;
+            });
+            /*var divs = $('#article')[0].children;
+            divs.forEach(function(item, index, array) {
+                console.
+            });
+            var input = $("<input>")
+               .attr("type", "hidden")
+               .attr("name", "formdiv").val($('#article')[0].children);
+            $('form[name="article"]').append(input);*/
+
+            // Hide errors
+            $("#article_no_code").hide();
+            $("#article_exists_error").hide();
+
+            if (inUse === true)
+            {
+                $("#article_exists_error").show();
+                return false;
+            }
+
+
+        });
+
+        var inUse = false;
+
+        function checkExists()
+        {
+            // Get the input value
+            var articleName = $("#article_title").val();
+
+            // Send an ajax request with the user input data
+            $.ajax({
+                type: "POST",
+                url: "{{ path('article_exists') }}",
+                data: {articleName: articleName }
+            })
+            .done(function(data){
+
+                if (typeof data.status != "undefined" && data.status != "undefined" && data.status == "OK")
+                {
+                    if (typeof data.message != "undefined" && data.message != "undefined")
+                    {
+                        if (parseInt(data.message) == 1)
+                        {
+                            // Folder name already exists
+                            // => raise flag
+                            inUse = true;
+                            // => display error message
+                            $("#article_exists_error").show();
+                            return;
+                        }
+                    }
+                }
+
+            });
+
+            // We suppose all went well.
+            // If not, the Ajax call will update the flag and display the error message
+            inUse = false;
+            $("#article_exists_error").hide();
+        }
+
+        $(".btn-add").on("click", function() {
+            var $collectionHolder = $($(this).data("rel"));
+            var index = $collectionHolder.data("index");
+            var prototype = $collectionHolder.data("prototype");
+            //console.log(prototype);
+            $("#article").append(prototype.replace(/__name__/g, index));
+            $collectionHolder.data("index", index+1);
+        });
+
+        $("#log").on("click", function() {
+
+        });
+
+        $("body").on("click", ".btn-remove", function() {
+            $("."+$(this).data("rel")).remove();
+        });
     });
 </script>
