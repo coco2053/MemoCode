@@ -50,10 +50,18 @@ class Article
      */
     private $memos;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $color;
+
+    private $colors = ['#FF4626', '#FF8626', '#FFBC26', '#FFEB26', '#ABFF26', '#26FF35', '#28FF73', '#28FFE8', '#28A0FF', '#2834FF', '#9228FF', '#FF28F3'];
+
     public function __construct()
     {
         $this->texts = new ArrayCollection();
         $this->memos = new ArrayCollection();
+        $this->color = $this->randomColor();
     }
 
     public function getId(): ?int
@@ -157,5 +165,34 @@ class Article
         }
 
         return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function getColors(): ?array
+    {
+        return $this->colors;
+    }
+
+    public function setColors(array $colors): self
+    {
+        $this->colors = $colors;
+
+        return $this;
+    }
+
+    public function randomColor()
+    {
+        return $this->colors[array_rand($this->colors, 1)];
     }
 }

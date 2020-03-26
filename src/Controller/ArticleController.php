@@ -14,12 +14,30 @@ use Doctrine\ORM\EntityManagerInterface;
 class ArticleController extends AbstractController
 {
     /**
-     * @Route("/article", name="article_show")
+     * @Route("/articles", name="articles_show")
      */
     public function index(ArticleRepository $repo)
     {
         $articles = $repo->findAll();
         return $this->render('article/index.html.twig', [
+            'articles' => $articles
+        ]);
+    }
+
+    /**
+     * @Route("/articles/search", name="articles_search")
+     */
+    public function search(ArticleRepository $repo, Request $request)
+    {
+
+        $search = $request->request->get('search');
+        //$articles = $repo->findAll();
+
+        $articles = $repo->findBeginWith($search);
+        //var_dump($search);
+        //var_dump($articles);
+
+        return $this->render('article/search_result.html.twig', [
             'articles' => $articles
         ]);
     }
@@ -59,7 +77,7 @@ class ArticleController extends AbstractController
             $em->flush();
             //dd($article);
 
-            return $this->redirectToRoute('article_show', ['id' => $article->getId()]);
+            return $this->redirectToRoute('articles_show');
         }
 
         return $this->render('article/create.html.twig', [

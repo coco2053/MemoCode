@@ -4,38 +4,59 @@
         <meta charset="UTF-8">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Ubuntu:700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu:700|Montserrat:500,700&display=swap" rel="stylesheet">
         <link href="css/prism.css" rel="stylesheet" />
+        <link href="css/jquery.loadingModal.min.css" rel="stylesheet" />
         <style>
-            .articles a {
+        article {
+            padding: 10px;
+        }
+            body {
+                font-family: 'Montserrat';
+            }
+            h2 {
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 26px;
+
+            }
+            h3 {
+                margin-top: 10px;
+                margin-bottom: 20px;
+                font-size: 22px;
+                font-weight: 700;
+                line-height: 26px;
+            }
+            #articles a {
                 text-decoration: none;
                 color: black;
                 width: 100%;
             }
-            .articles a:hover .article {
+            #articles a:hover .article {
                 box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
                 transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
             }
             .article {
+                display: flex;
                 margin-top: 20px;
                 margin-bottom: 20px;
                 height: 200px;
                 box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
             }
             header {
+                margin-bottom: 30px;
                 box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
             }
             #logo {
-                margin-left: 15%;
-                margin-top: 20px;
-                margin-bottom: 20px;
+                margin-top: 1px;
+                margin-bottom: 10px;
             }
             .thumbnail {
                 font-family: 'Ubuntu', sans-serif;
                 font-size: 30px;
                 text-align: center;
                 color: white;
-                width: calc(150px * 1.77777);
+                min-width: calc(150px * 1.77777);
                 height: 150px;
                 background-color: #b470b3;
                 display: inline-block;
@@ -47,7 +68,8 @@
                 list-style: none;
             }
             .info {
-                margin-top: 10px;
+                margin-right: 10px;
+                margin-top: 25px;
                 display: inline-block;
                 position: relative;
                 height: 150px;
@@ -102,58 +124,131 @@
                 background-color: #a5dc86;
                 box-shadow: none;
             }
+            #search {
+                display: inline-block;
+                margin-right: 50px;
+            }
+            #search-icon {
+                margin-left: 10px;
+            }
+            #search-input {
+
+            }
+            #calendar {
+                margin-right: 10px;
+            }
+            .date {
+                font-size: 15px;
+                font-weight: 500;
+                color: #6c1cc7;
+            }
+            article .date {
+                margin-top: 5px;
+            }
+            .info {
+                box-sizing: border-box;
+            }
+            .code-toolbar {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            .banner {
+                margin-left: 15%;
+                margin-right: 15%;
+            }
+            #user {
+                color: #6c1cc7;
+            }
         </style>
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
         <header>
-            <img id="logo" src="image/logo.svg" width="300px"/>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <img id="logo" src="image/logo.svg" width="300px"/>
+                <div>
+                    {{ include("theme/form_search.html.twig") }}
+                    <div class="btn-group">
+                      <button type="button" id="user" class="btn dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user fa-3x" aria-hidden="true"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">se connecter</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+            <!--<div class="banner">
+                <img id="logo" src="image/logo.svg" width="300px"/>
+                {{ include("theme/form_search.html.twig")}}
+                <div class="btn-group">
+                  <button type="button" id="user" class="btn dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user fa-3x" aria-hidden="true"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">se connecter</a>
+                </div>
+            </div>-->
         </header>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2"> </div>
                 <div class="col-md-8">
-            <a data-target="{{ path('article_add') }}" data-tooltip="Nouvel article"
-       class="tooltipped modal-trigger btn right-align"
-       href="#addModal">+</a>
-            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title"></h5>
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><b>X</b></button>
-                    </div>
-                        <div class="modal-body" id="modal-ajax">
+                    <a data-target="{{ path('article_add') }}" class="tooltipped modal-trigger btn btn-primary" data-tooltip="Nouvel article" role="button" href="#addModal">Nouvel article</a>
+                    <!--<a data-target="{{ path('article_add') }}" data-tooltip="Nouvel article" class="tooltipped modal-trigger btn right-align" href="#addModal">+</a>-->
+                    <!-- Modal de contenu -->
+                    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"></h5>
+                                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><b>X</b></button>
+                                </div>
+                                <div class="modal-body" id="modal-ajax"></div>
+                                <div class="modal-footer"></div>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                        </div>
                     </div>
-                </div>
-            </div>
             {% block body %}{% endblock %}
             </div>
             <div class="col-md-2"> </div>
         </div>
     </div>
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
               crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <script src="js/prism.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script src="js/prism.js"></script>
+    <script src="js/jquery.loadingModal.min.js"></script>
+
+
         {% block javascripts %}
             <script>
                 $(function() {
-                    let colors = ['#FF4626', '#FF8626', '#FFBC26', '#FFEB26', '#ABFF26', '#26FF35', '#28FF73', '#28FFE8', '#28A0FF', '#2834FF', '#9228FF', '#FF28F3'];
+
+                    $(document).on({
+                        ajaxStart: function() { $('body').loadingModal({text: 'chargement...'});    },
+                        ajaxStop: function() { $('body').loadingModal('hide'); }
+                    });
+
+                    $("#search").bind("input change", search);
+
+                    /*let colors = ['#FF4626', '#FF8626', '#FFBC26', '#FFEB26', '#ABFF26', '#26FF35', '#28FF73', '#28FFE8', '#28A0FF', '#2834FF', '#9228FF', '#FF28F3'];
 
                     $('figure').each(function(index){
                         let randomIndex = Math.floor(Math.random() * colors.length);
                         $(this).css('background-color', colors[randomIndex]);
-                    });
+                    });*/
                     $('#addModal').on('show.bs.modal',
                         function(e) {
                         Prism.highlightAllUnder($('#modal-ajax')[0]);
                     });
                     $('.modal-trigger').click(function () {
+
                         //On récupère l'url depuis la propriété "Data-target" de la balise html a
                         url = $(this).attr('data-target');
                         title = $(this).attr('data-tooltip');
@@ -166,6 +261,22 @@
                             $('#addModal').modal();
                         });
                     })
+
+                    function search(){
+                        var search = $("#search-input").val();
+
+                        // Send an ajax request with the user input data
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ path('articles_search') }}",
+                            data: {search: search }
+                        })
+                        .done(function(data) {
+                            //console.log(data);
+                            $('#articles').html(data);
+
+                        });
+                    }
                 });
             </script>
         {% endblock %}

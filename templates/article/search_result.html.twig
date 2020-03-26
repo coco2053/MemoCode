@@ -1,8 +1,3 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Mes articles de code{% endblock %}
-
-{% block body %}
 <section id="articles">
     {% for article in articles|reverse %}
         <a data-target="{{ path('article_show', {'id': article.id}) }}" data-tooltip="Lire l'article" class="modal-trigger" href="#addModal">
@@ -22,5 +17,24 @@
         </a>
     {% endfor %}
 </section>
-{% endblock %}
-
+<script>
+    $(function() {
+        $('#addModal').on('show.bs.modal',
+            function(e) {
+            Prism.highlightAllUnder($('#modal-ajax')[0]);
+        });
+        $('.modal-trigger').click(function () {
+            //On récupère l'url depuis la propriété "Data-target" de la balise html a
+            url = $(this).attr('data-target');
+            title = $(this).attr('data-tooltip');
+            //on fait un appel ajax vers l'action symfony qui nous renvoie la vue
+            $.get(url, function (data) {
+                //on injecte le html dans la modale
+                $('.modal-body').html(data);
+                $('.modal-title').html(title);
+                //On initialise les modales materialize
+                $('#addModal').modal();
+            });
+        })
+    });
+</script>

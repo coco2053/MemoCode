@@ -22,19 +22,18 @@ class ArticleRepository extends ServiceEntityRepository
     // /**
     //  * @return Article[] Returns an array of Article objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function findBeginWith($value)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.title LIKE :val or a.description LIKE :val')
+            ->setParameter('val', '%'.$value.'%')
+            ->orderBy('a.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Article
