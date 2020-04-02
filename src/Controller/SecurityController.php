@@ -48,6 +48,11 @@ class SecurityController extends AbstractController
 
             return $this->redirectToRoute('articles_show');
         }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            return $this->render('security/signup_error.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
 
         return $this->render('security/signup.html.twig', [
             'form' => $form->createView()
@@ -71,6 +76,18 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/ajaxlogin", name="security_ajaxlogin", methods={"POST"})
+     */
+    public function ajaxlogin(Request $request)
+    {
+        $user = $this->getUser();
+
+        return $this->json([
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles(),
+        ]);
+    }
     /**
      * @Route("/deconnexion", name="security_logout")
      */

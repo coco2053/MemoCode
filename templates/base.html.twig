@@ -208,6 +208,9 @@
             .article {
                 overflow: hidden;
             }
+            #error {
+                margin-top: 10px;
+            }
         </style>
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
@@ -311,6 +314,8 @@
     <script src="js/jquery.loadingModal.min.js"></script>
     <script src="js/bootbox.min.js"></script>
     <script src="js/bootbox.locales.min.js"></script>
+    <script src="js/jquery.form.min.js"></script>
+
       {% if modalShow is defined %}
         <script src="{{ asset("js/showModal.js") }}"></script>
       {% endif %}

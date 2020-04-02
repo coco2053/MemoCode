@@ -1,3 +1,8 @@
 index:
     path: /
     controller: App\Controller\ArticleController::index
+
+login:
+    path:       /ajaxlogin
+    controller: App\Controller\SecurityController::ajaxlogin
+    methods: POST
