@@ -1,0 +1,3 @@
+$("#centralModalSm").modal({
+    show: true
+});

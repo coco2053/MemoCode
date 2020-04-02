@@ -10,9 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
- * @UniqueEntity(
- * fields= {"title"},
- * message= "Une article du même titre existe déjà!")
+ *
  */
 class Article
 {
@@ -56,6 +54,12 @@ class Article
     private $color;
 
     private $colors = ['#FF4626', '#FF8626', '#FFBC26', '#FFEB26', '#ABFF26', '#26FF35', '#28FF73', '#28FFE8', '#28A0FF', '#2834FF', '#9228FF', '#FF28F3'];
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="articles")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function __construct()
     {
@@ -194,5 +198,17 @@ class Article
     public function randomColor()
     {
         return $this->colors[array_rand($this->colors, 1)];
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

@@ -1,11 +1,11 @@
 <div class="del-memo-{{ form.vars.name }}">
     <div class="switch-field">
-
+        {{ form_row(form.articleOrder, { 'attr': {'class': 'no-height'} }) }}
         {{ form_row(form.language, {'label': 'Langage'}) }}
 
     </div>
     {{ form_row(form.content, {'label': 'Code', 'attr': {'required' : 'false',
                                                          'placeholder' : 'Entrez votre code','rows': '10','spellcheck': 'false' }}) }}
-    {{ form_row(form.articleOrder) }}
+
     <button type="button" class="btn btn-remove fa fa-trash fa-lg" data-rel="del-memo-{{ form.vars.name }}"></button>
 </div>

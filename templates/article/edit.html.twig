@@ -1,4 +1,4 @@
-{{ form_start(form, {'action': path('article_add')}) }}
+{{ form_start(form, {'action' : path('article_edit', {'id' : article.id})}) }}
 {{ form_row(form._token) }}
 
 {{ form_row(form.title, {'label': 'Titre', 'attr': {'placeholder': 'Entrez le titre de l\'article'}}) }}
@@ -48,7 +48,7 @@
 </div>
 
 <button type="submit" class="btn btn-success submit">
-    Ajouter l'article
+    Enregistrer
 </button>
 
 
@@ -56,7 +56,6 @@
 
 <script>
     $(function() {
-        $("#article_title").bind("input change", checkExists);
 
         $("form[name=article]").on('submit', function(e){
             if ($('.switch-field').length < 1) {
@@ -81,45 +80,6 @@
 
 
         });
-
-        var inUse = false;
-
-        function checkExists()
-        {
-            // Get the input value
-            var articleName = $("#article_title").val();
-
-            // Send an ajax request with the user input data
-            $.ajax({
-                type: "POST",
-                url: "{{ path('article_exists') }}",
-                data: {articleName: articleName }
-            })
-            .done(function(data){
-
-                if (typeof data.status != "undefined" && data.status != "undefined" && data.status == "OK")
-                {
-                    if (typeof data.message != "undefined" && data.message != "undefined")
-                    {
-                        if (parseInt(data.message) == 1)
-                        {
-                            // Folder name already exists
-                            // => raise flag
-                            inUse = true;
-                            // => display error message
-                            $("#article_exists_error").show();
-                            return;
-                        }
-                    }
-                }
-
-            });
-
-            // We suppose all went well.
-            // If not, the Ajax call will update the flag and display the error message
-            inUse = false;
-            $("#article_exists_error").hide();
-        }
 
         $(".btn-add").on("click", function() {
             var $collectionHolder = $($(this).data("rel"));

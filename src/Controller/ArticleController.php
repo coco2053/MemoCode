@@ -29,13 +29,13 @@ class ArticleController extends AbstractController
      */
     public function search(ArticleRepository $repo, Request $request)
     {
-
+        $userId = null;
         $search = $request->request->get('search');
-        //$articles = $repo->findAll();
+        $isChecked = $request->request->get('isChecked');
 
-        $articles = $repo->findBeginWith($search);
-        //var_dump($search);
-        //var_dump($articles);
+        if ($isChecked == "true") $userId = $this->getUser()->getId();
+
+        $articles = $repo->findBeginWith($search, $userId);
 
         return $this->render('article/search_result.html.twig', [
             'articles' => $articles
@@ -44,46 +44,63 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/article/add", name="article_add")
-     * @Route("/article/{id}/edit", name="article_edit")
      */
-    public function form(Article $article = null, Request $request, EntityManagerInterface $em)
+    public function add(Request $request, EntityManagerInterface $em)
     {
-
-        if (!$article) {
-            $article = new Article();
-        }
+        $article = new Article();
 
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$article->getId()) {
-                $article->setCreatedAt(new \DateTime());
-            }
-
-            /*$divs =  $request->request->get('formdiv');
-            if (!empty($divs)) {
-                $pieces = explode(",", $divs);
-                $memos = $article->getMemos();
-                $texts = $article->getTexts();
-                foreach ($memos as $key => $memo) {
-                    foreach ($pieces as $piece) {
-                        if ($piece == $key) $memo->setText($texts[$key]);
-                    }
-                }
-            }*/
-
+            $article->setCreatedAt(new \DateTime());
+            $article->setUser($this->getUser());
             $em->persist($article);
             $em->flush();
-            //dd($article);
 
             return $this->redirectToRoute('articles_show');
         }
 
         return $this->render('article/create.html.twig', [
-                'form' => $form->createView(),
-                'editMode' => $article->getId() !== null
+                'form' => $form->createView()
             ]);
+    }
+
+    /**
+     * @Route("/article/{id}/edit", name="article_edit")
+     */
+    public function edit(Article $article, Request $request, EntityManagerInterface $em)
+    {
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+
+       if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash(
+                'notice',
+                'Article modifié !'
+            );
+           return $this->redirectToRoute('articles_show');
+        }
+        return $this->render('article/edit.html.twig', [
+                'form' => $form->createView(),
+                'article' => $article
+            ]);
+    }
+
+    /**
+     * @Route("/article/{id}/delete", name="article_delete")
+     */
+    public function delete(Article $article, EntityManagerInterface $em)
+    {
+        $em->remove($article);
+        $em->flush();
+
+        $this->addFlash(
+            'notice',
+            'Article supprimé !'
+        );
+        return $this->redirectToRoute('articles_show');
     }
 
     /**
@@ -114,7 +131,7 @@ class ArticleController extends AbstractController
 
             $articleName = $request->request->get('articleName');
 
-            $article = $repo->findOneByTitle($articleName);
+            $article = $repo->findOneByTitleByUser($articleName, $this->getUser()->getId());
 
             if ($article === null) {
                 return new JsonResponse(array(

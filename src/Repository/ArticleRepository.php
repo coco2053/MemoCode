@@ -23,9 +23,21 @@ class ArticleRepository extends ServiceEntityRepository
     //  * @return Article[] Returns an array of Article objects
     //  */
 
-    public function findBeginWith($value)
+    public function findBeginWith($value, $userId)
     {
+        if($userId == null) {
+            return $this->createQueryBuilder('a')
+                ->andWhere('a.title LIKE :val or a.description LIKE :val')
+                ->setParameter('val', '%'.$value.'%')
+                ->orderBy('a.id', 'ASC')
+                ->setMaxResults(10)
+                ->getQuery()
+                ->getResult()
+            ;
+        }
         return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :id')
+            ->setParameter('id', $userId)
             ->andWhere('a.title LIKE :val or a.description LIKE :val')
             ->setParameter('val', '%'.$value.'%')
             ->orderBy('a.id', 'ASC')
@@ -35,15 +47,17 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Article
+
+    public function findOneByTitleByUser($articleName, $userId)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :id')
+            ->setParameter('id', $userId)
+            ->andWhere('a.title = :name')
+            ->setParameter('name', $articleName)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
 }

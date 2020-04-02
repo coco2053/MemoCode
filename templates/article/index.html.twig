@@ -4,6 +4,11 @@
 
 {% block body %}
 <section id="articles">
+    {% if articles|length < 1 %}
+        <div class="empty">
+            Vous n'avez ecris aucun article.
+        </div>
+    {% endif %}
     {% for article in articles|reverse %}
         <a data-target="{{ path('article_show', {'id': article.id}) }}" data-tooltip="Lire l'article" class="modal-trigger" href="#addModal">
             <div class="article">
@@ -15,6 +20,7 @@
 
             <div class="info">
                 <div class="date"><i id="calendar" class="fa fa-calendar-alt fa-md"></i>{{ article.createdAt | localizeddate('none', 'none', 'fr', null, 'MMMM Y') | upper}}</div>
+                <div>{{ article.user.username }}</div>
                 <h3>{{ article.title }}</h3>
                 <div class="description">{{ article.description[:200] }}</div>
                 </div>

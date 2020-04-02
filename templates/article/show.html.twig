@@ -1,20 +1,54 @@
 <article>
+    {% if app.user %}
+        {% if article.user.id == app.user.id %}
+            <div class="right">
+                <button type="button" class="btn btn-sm btn-secondary modal-btn tooltipped modal-trigger" data-target="{{ path('article_edit', {'id': article.id}) }}" data-tooltip="Modifier article" role="button" href="#addModal">
+                <i class="fas fa-edit"></i>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-secondary modal-btn tooltipped" data-target="{{ path('article_delete', {'id': article.id}) }}" id="delete-article" data-tooltip="Modifier article" role="button">
+                <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        {% endif %}
+    {% endif %}
     <div class="date"><i id="calendar" class="fa fa-calendar-alt fa-md"></i>{{ article.createdAt | localizeddate('none', 'none', 'fr', null, 'd MMMM Y') | upper}}</div>
+    <div>{{ article.user.username }}</div>
     <h3>{{ article.title }}</h3>
     <div class="content">
-        <p>{{ article.description | raw }}</p>
+        <p>{{ article.description }}</p>
     </div>
     {% set values = article.texts %}
     {% set values = values|merge(article.memos) %}
 
-
-    {% for value in values|sort((a) => a.articleOrder) %}
+    {% for value in values|sort((a, b) => a.articleOrder <=> b.articleOrder) %}
         {% if value.language is defined %}
             <div class="code">
                 <pre><code class={{"language-"~value.language.name}} contenteditable spellcheck="false">{{ value.content }}</code></pre>
             </div>
         {% else %}
-            <div class="text"> <p>{{ value.content}}</p></div>
+            <div class="text"> <p>{{ value.content | raw}}</p></div>
         {% endif %}
     {% endfor %}
 </article>
+<script>
+    $(function() {
+        $('#delete-article').click(function () {
+            bootbox.confirm({
+            message: "Confirmation de la suppression",
+            centerVertical: true,
+            callback: function (result) {
+                if(result == true) {
+                    url = $('#delete-article').attr('data-target');
+                    title = $('#delete-article').attr('data-tooltip');
+                    $.get(url, function (data) {
+                        location.reload();
+                    });
+                } else {
+                    return;
+                }
+            }
+            });
+        });
+    });
+</script>
