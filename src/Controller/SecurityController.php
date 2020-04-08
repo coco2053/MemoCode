@@ -88,6 +88,7 @@ class SecurityController extends AbstractController
             'roles' => $user->getRoles(),
         ]);
     }
+
     /**
      * @Route("/deconnexion", name="security_logout")
      */

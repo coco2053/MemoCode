@@ -31,34 +31,34 @@
     </div>
   </form>#}
   <form class="login">
-      <div class="form-group">
-        <label for="inputEmail">Email</label>
-        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-      </div>
-      <div class="form-group">
-        <label for="inputPassword" class="sr-only">Mot de passe</label>
+    <div class="form-group">
+      <label for="inputEmail">Email</label>
+      <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword" class="sr-only">Mot de passe</label>
 
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
-            <div style="display:none;" id="error" class="alert alert-danger"></div>
-        <input type="hidden" name="_login" value="true">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-      </div>
-      <div class="form-group form-check">
-        <input type="checkbox" name="_remember_me">
-        <label class="form-check-label" for="exampleCheck1">Se souvenir de moi</label>
-      </div>
-      <div class="form-group">
-        <button id="login" class="btn btn-primary" data-target="{{ path('security_ajaxlogin') }}">Connexion</button>
-        <div style="margin-top: 10px">
-          <div>
-              <a data-target="{{ path('security_signup') }}" class="tooltipped modal-trigger" data-tooltip="Inscription" role="button" href="#addModal">Inscription</a>
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+          <div style="display:none;" id="error" class="alert alert-danger"></div>
+      <input type="hidden" name="_login" value="true">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    </div>
+    <div class="form-group form-check">
+      <input type="checkbox" name="_remember_me">
+      <label class="form-check-label" for="exampleCheck1">Se souvenir de moi</label>
+    </div>
+    <div class="form-group">
+      <button id="login" class="btn btn-primary" data-target="{{ path('security_ajaxlogin') }}">Connexion</button>
+      <div style="margin-top: 10px">
+        <div>
+            <a data-target="{{ path('security_signup') }}" class="tooltipped modal-trigger" data-tooltip="Inscription" role="button" href="#addModal">Inscription</a>
 
-          <div class="password-claim">
-              <a data-target="{{ path('security_password_claim') }}" class="tooltipped modal-trigger" data-tooltip="Mot de passe oublié" role="button" href="#addModal">Mot de passe oublié</a>
-          </div>
+        <div class="password-claim">
+            <a data-target="{{ path('security_password_claim') }}" class="tooltipped modal-trigger" data-tooltip="Mot de passe oublié" role="button" href="#addModal">Mot de passe oublié</a>
         </div>
       </div>
-    </form>
+    </div>
+  </form>
 </div>
 <script>
   $(function(){

@@ -7,6 +7,7 @@
         <link href="https://fonts.googleapis.com/css?family=Ubuntu:700|Montserrat:500,700&display=swap" rel="stylesheet">
         <link href="css/prism.css" rel="stylesheet" />
         <link href="css/jquery.loadingModal.min.css" rel="stylesheet" />
+        <LINK REL="SHORTCUT ICON" href="{{asset('image/favicon.ico')}}">
         <style>
         @media (max-width:768px) {
             #logo {
@@ -314,7 +315,6 @@
     <script src="js/jquery.loadingModal.min.js"></script>
     <script src="js/bootbox.min.js"></script>
     <script src="js/bootbox.locales.min.js"></script>
-    <script src="js/jquery.form.min.js"></script>
 
       {% if modalShow is defined %}
         <script src="{{ asset("js/showModal.js") }}"></script>
@@ -386,6 +386,17 @@
 
                         });
                     }
+                    Prism.plugins.NormalizeWhitespace.setDefaults({
+                        'remove-trailing': true,
+                        'remove-indent': false,
+                        'left-trim': false,
+                        'right-trim': true,
+                        'break-lines': 120,/*
+                        'indent': 2,
+                        'remove-initial-line-feed': false,
+                        'tabs-to-spaces': 4,
+                        'spaces-to-tabs': 4*/
+                    });
                 });
             </script>
         {% endblock %}

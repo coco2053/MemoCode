@@ -62,11 +62,6 @@
                 $("#article_no_code").show().delay(2000).fadeOut(300);
                 return false;
             }
-            var $allNumbers = $('[type=number]', this.form);
-            //allNumbers.val(2);
-            $('[type=number]', this.form).each(function(index) {
-                this.value = index;
-            });
 
             // Hide errors
             $("#article_no_code").hide();
