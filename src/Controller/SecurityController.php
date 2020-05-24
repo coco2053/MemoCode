@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\Mailer;
+use App\Service\GouvApi;
 use App\Form\SignUpType;
 use App\Form\ChangePasswordType;
 use App\Repository\UserRepository;
@@ -20,14 +21,20 @@ class SecurityController extends AbstractController
     /**
      * @Route("/inscription", name="security_signup")
      */
-    public function signUp(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, Mailer $mailer)
+    public function signUp(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, Mailer $mailer, GouvApi $gouvApi)
     {
         $user = new User();
 
         $form = $this->createForm(SignUpType::class, $user);
 
         $form->handleRequest($request);
-
+        /*if ($form->isSubmitted() && !$form->isValid()) {
+            $postCode = $user->getAddress()->getPostalCode();
+            if ($postCode != null) {
+                $cities = $gouvApi->getCities($postCode);
+                dd($cities);
+            }
+        }*/
         if ($form->isSubmitted() && $form->isValid()) {
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
@@ -47,11 +54,6 @@ class SecurityController extends AbstractController
             );
 
             return $this->redirectToRoute('articles_show');
-        }
-        if ($form->isSubmitted() && !$form->isValid()) {
-            return $this->render('security/signup_error.html.twig', [
-                'form' => $form->createView()
-            ]);
         }
 
         return $this->render('security/signup.html.twig', [

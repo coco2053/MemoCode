@@ -27,12 +27,14 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Email()
+     * @Assert\NotNull
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min="8", minMessage="Votre mot de passe doit contenir au moins 8 caracteres !")
+     * @Assert\NotNull
      */
     private $password;
 
@@ -44,6 +46,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min="3", minMessage="Votre mot de passe doit contenir au moins 3 caracteres !")
+     * @Assert\NotNull
      */
     private $username;
 
@@ -76,6 +79,12 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Article", mappedBy="user")
      */
     private $articles;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Address",cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $address;
 
     /**
      * [__construct]
@@ -223,6 +232,18 @@ class User implements UserInterface
                 $article->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): self
+    {
+        $this->address = $address;
 
         return $this;
     }

@@ -322,7 +322,22 @@
 
         {% block javascripts %}
             <script>
+
                 $(function() {
+                    $('body').on('submit', '#register', function(event) {
+                        event.preventDefault();
+                        var postUrl = $(this).attr('action');
+                        var formData = $(this).serialize();
+                        submit(postUrl, formData);
+
+                    })
+                    $('body').on('blur', '#sign_up_address_postalCode', function(event) {
+                        console.log('blur ...');
+                        var postUrl = $('#register').attr('action');
+                        var formData = $('#register').serialize();
+                        submit(postUrl, formData);
+
+                    });
                     let bool = false;
                     $('#modal-up').click(function () {
                         if (!bool) {
@@ -369,7 +384,21 @@
                             }
                         });
                     });
+                    function submit (postUrl, formData) {
+                        console.log('sending ...');
+                        $.ajax({
+                            url : postUrl,
+                            type: 'POST',
+                            data : formData
+                        }).done(function(response){
+                            if (response.status === '201') {
+                                window.location.href = response.route;
+                                return;
+                            }
+                            $('#modal-ajax').html(response);
+                        });
 
+                    }
                     function search(){
                         var search = $("#search-input").val();
 
