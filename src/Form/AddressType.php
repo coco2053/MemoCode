@@ -16,9 +16,12 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class AddressType extends AbstractType
 {
-    public function __construct(GouvApi $gouvApi)
+    private $country;
+
+    public function __construct(GouvApi $gouvApi, $country = null)
     {
         $this->gouvApi = $gouvApi;
+        $this->country = $country;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -39,11 +42,9 @@ class AddressType extends AbstractType
                 'error_bubbling' => true,
                 'attr' => array('placeholder' => 'Entrez le code postal', 'class' => 'autoDptController')
             ))
-            /*->add('city', EntityType::class,      [
-                    "class"         => "App:City",
+           /* ->add('city', TextType::class,      [
                     'label' => 'Ville*',
-                    "required"      => true,
-                    'attr' => array('class' => 'autoDptField_Country')
+                    "required"      => true
                 ]
             )*/
             ->add('departement', EntityType::class,      [
@@ -60,27 +61,39 @@ class AddressType extends AbstractType
                 ]
             )
         ;
+        $builder->get('country')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $this->country = $form->getNormData()->getSlug();
+                dump($this->country);
+            }
+        );
         $builder->get('postalCode')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) {
                 $form = $event->getForm();
                 $postCode = $form->getNormData();
-                $cities = $this->gouvApi->getCities($postCode);
+                if($this->country == 'france') {
 
-                $this->addCityField($form->getParent(), $cities);
+                    $cities = $this->gouvApi->getCities($postCode);
 
+                    $form->getParent()->add('city', ChoiceType::class, [
+                        'required'    => false,
+                        'placeholder' => 'Sélectionnez votre ville',
+                        'choices'     => array_combine($cities, $cities)
+                    ]);
 
+                } else {
+                    $form->getParent()->add('city', TextType::class,      [
+                            'label' => 'Ville*',
+                            "required"      => true
+                        ]
+                    );
+
+                }
             }
         );
-    }
-
-    private function addCityField(FormInterface $form, $cities)
-    {
-        $form->add('city', ChoiceType::class, [
-            'required'    => false,
-            'placeholder' => 'Sélectionnez votre ville',
-            'choices'     => array_combine($cities, $cities)
-        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
