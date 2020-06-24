@@ -74,9 +74,9 @@ class AddressType extends AbstractType
             function (FormEvent $event) {
                 $form = $event->getForm();
                 $postCode = $form->getNormData();
-                if($this->country == 'france') {
 
                     $cities = $this->gouvApi->getCities($postCode);
+                    dump($cities);
 
                     $form->getParent()->add('city', ChoiceType::class, [
                         'required'    => false,
@@ -84,14 +84,7 @@ class AddressType extends AbstractType
                         'choices'     => array_combine($cities, $cities)
                     ]);
 
-                } else {
-                    $form->getParent()->add('city', TextType::class,      [
-                            'label' => 'Ville*',
-                            "required"      => true
-                        ]
-                    );
 
-                }
             }
         );
     }
